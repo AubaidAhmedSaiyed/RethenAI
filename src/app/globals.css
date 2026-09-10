@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  /* Cool stone palette — distinctive from the warm ivory mainstream */
+  --ivory: #F2F4F7;
+  --off-white: #E8EBF0;
+  --charcoal: #0D1117;
+  --graphite: #2D3340;
+  --soft-gray: #7A8494;
+  --border: #CBD1DC;
+
+  /* Deep forest green accent — uncommon in infrastructure tooling */
+  --accent: #1B6B50;
+  --accent-light: #229068;
+  --accent-muted: #134D3A;
+  --accent-pale: #EAF4EF;
+
+  /* Dark section surface */
+  --dark-bg: #0D1117;
+  --dark-surface: #131820;
+  --dark-border: #1E2535;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--charcoal);
+  font-family: var(--font-space-grotesk), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: var(--font-geist-mono), 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--ivory); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--soft-gray); }
+
+/* Node hover highlight uses accent green */
+.node-highlight { transition: all 0.2s ease; }
+.node-highlight:hover {
+  background-color: rgba(27, 107, 80, 0.06);
+  border-color: rgba(27, 107, 80, 0.35);
+}
+
+/* Connector line */
+.connector-line {
+  width: 1px;
+  background: linear-gradient(to bottom, var(--border), transparent);
+}
+
+/* Flow animation */
+@keyframes flow-down {
+  0%   { opacity: 0; transform: translateY(-4px); }
+  50%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(4px); }
+}
+.flow-dot { animation: flow-down 1.8s ease-in-out infinite; }
+.flow-dot:nth-child(2) { animation-delay: 0.6s; }
+.flow-dot:nth-child(3) { animation-delay: 1.2s; }
+
+/* Subtle pulse */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+.subtle-pulse { animation: subtle-pulse 2.5s ease-in-out infinite; }
+
+/* Chip label */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft-gray);
+  background: transparent;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+/* Trace path SVG animation */
+@keyframes trace-in {
+  from { stroke-dashoffset: 100; opacity: 0; }
+  to   { stroke-dashoffset: 0;   opacity: 1; }
+}
+.trace-path {
+  stroke-dasharray: 100;
+  animation: trace-in 0.6s ease forwards;
+}
+
+/* Section rule */
+.section-rule { border-top: 1px solid var(--border); }

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background -->
+  <rect width="100" height="100" fill="#F2F4F7"/>
+  
+  <!-- 
+    Geometric R with diagonal slash — replicating the Rethen logo mark.
+    The R is built from geometric rectangles/paths with sharp corners.
+    A thick diagonal band cuts from lower-left to upper-right across the letter.
+  -->
+  
+  <!-- R letter body: vertical stem -->
+  <rect x="18" y="14" width="14" height="72" fill="#0D1117"/>
+  
+  <!-- R top horizontal bar -->
+  <rect x="18" y="14" width="42" height="13" fill="#0D1117"/>
+  
+  <!-- R bowl (right arc — simplified as rectangles for geometric look) -->
+  <rect x="50" y="14" width="14" height="32" rx="0" fill="#0D1117"/>
+  <rect x="18" y="38" width="44" height="12" fill="#0D1117"/>
+  
+  <!-- R leg kicking to lower right -->
+  <polygon points="32,50 46,50 72,86 56,86" fill="#0D1117"/>
+  
+  <!-- Diagonal slash band — cuts upper-left to lower-right across the R -->
+  <!-- Slash goes from bottom-left area to upper-right, cutting through bowl and leg -->
+  <polygon points="10,72 22,58 76,18 64,32" fill="#0D1117"/>
+  
+  <!-- White slash cutout — creates the gap/negative space in the slash -->
+  <polygon points="16,65 26,52 72,22 62,35" fill="#F2F4F7"/>
+</svg>
