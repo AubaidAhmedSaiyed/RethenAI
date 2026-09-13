@@ -20,6 +20,22 @@ export async function onRequestPost(context: any) {
     
     await stmt.bind(email, company, building, hardest || "", new Date().toISOString()).run();
 
+    // Optional: Send notification to Discord/Slack webhook
+    const webhookUrl = context.env.NOTIFY_WEBHOOK_URL;
+    if (webhookUrl) {
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: `🚀 **New Waitlist Submission!**\n**Email:** ${email}\n**Company:** ${company}\n**Building:** ${building}\n**Hardest:** ${hardest || "N/A"}`
+          }),
+        });
+      } catch (e) {
+        console.error("Failed to send webhook notification", e);
+      }
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" },
     });
