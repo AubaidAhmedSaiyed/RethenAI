@@ -53,7 +53,7 @@ export async function onRequestPost(context: any) {
       return new Response(`Resend Error: ${errorText}`, { status: 500 });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, version: "v2-error-throwing" }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err: any) {
