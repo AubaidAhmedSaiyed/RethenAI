@@ -1,4 +1,8 @@
 name = "rethen-ai"
 pages_build_output_dir = "out"
 compatibility_date = "2026-09-13"
-compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rethen-db"
+database_id = "INSERT_YOUR_DATABASE_ID_HERE"
