@@ -4,9 +4,6 @@ import { useState, useRef } from "react";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../lib/firebase";
-
 export function EarlyAccess() {
   const [formState, setFormState] = useState<FormState>("idle");
   const formRef = useRef<HTMLFormElement>(null);
@@ -21,13 +18,21 @@ export function EarlyAccess() {
       company: formData.get("company"),
       building: formData.get("building"),
       hardest: formData.get("hardest") || "",
-      submittedAt: serverTimestamp(),
     };
 
     try {
-      await addDoc(collection(db, "waitlist"), data);
-      setFormState("success");
-      formRef.current?.reset();
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setFormState("success");
+        formRef.current?.reset();
+      } else {
+        setFormState("error");
+      }
     } catch (error) {
       console.error("Error submitting form: ", error);
       setFormState("error");
