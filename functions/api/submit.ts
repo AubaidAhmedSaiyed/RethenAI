@@ -20,34 +20,37 @@ export async function onRequestPost(context: any) {
     
     await stmt.bind(email, company, building, hardest || "", new Date().toISOString()).run();
 
-    // Optional: Send Email Notification via Resend
+    // Send Email Notification via Resend
     const resendApiKey = context.env.RESEND_API_KEY;
     const notifyEmail = context.env.NOTIFY_EMAIL;
     
-    if (resendApiKey && notifyEmail) {
-      try {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${resendApiKey}`
-          },
-          body: JSON.stringify({
-            from: "Rethen AI <onboarding@resend.dev>",
-            to: notifyEmail,
-            subject: "🚀 New Waitlist Submission",
-            html: `
-              <h2>New Waitlist Submission!</h2>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Company:</strong> ${company}</p>
-              <p><strong>Building:</strong> ${building}</p>
-              <p><strong>Hardest:</strong> ${hardest || "N/A"}</p>
-            `
-          }),
-        });
-      } catch (e) {
-        console.error("Failed to send email notification", e);
-      }
+    if (!resendApiKey || !notifyEmail) {
+      return new Response("Missing RESEND_API_KEY or NOTIFY_EMAIL", { status: 500 });
+    }
+
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${resendApiKey}`
+      },
+      body: JSON.stringify({
+        from: "Rethen AI <onboarding@resend.dev>",
+        to: notifyEmail,
+        subject: "🚀 New Waitlist Submission",
+        html: `
+          <h2>New Waitlist Submission!</h2>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Company:</strong> ${company}</p>
+          <p><strong>Building:</strong> ${building}</p>
+          <p><strong>Hardest:</strong> ${hardest || "N/A"}</p>
+        `
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      const errorText = await emailResponse.text();
+      return new Response(`Resend Error: ${errorText}`, { status: 500 });
     }
 
     return new Response(JSON.stringify({ success: true }), {
