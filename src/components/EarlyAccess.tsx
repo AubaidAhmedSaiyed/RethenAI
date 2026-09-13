@@ -125,9 +125,9 @@ export function EarlyAccess() {
                 <button
                   type="submit"
                   disabled={formState === "submitting"}
-                  className="mt-2 px-5 py-3 bg-[var(--accent)] text-white text-[13px] font-medium hover:bg-[var(--accent-light)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-[var(--accent)] hover:bg-[var(--accent-light)] text-white py-3 px-4 font-medium transition-colors disabled:opacity-50 mt-2"
                 >
-                  {formState === "submitting" ? "Sending..." : "Request early access"}
+                  {formState === "submitting" ? "Sending..." : "Request Access (v2)"}
                 </button>
 
                 <p className="text-[10px] font-mono text-center" style={{ color: "#3A4256" }}>
