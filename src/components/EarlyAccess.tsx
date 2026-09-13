@@ -4,6 +4,9 @@ import { useState, useRef } from "react";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../lib/firebase";
+
 export function EarlyAccess() {
   const [formState, setFormState] = useState<FormState>("idle");
   const formRef = useRef<HTMLFormElement>(null);
@@ -11,10 +14,24 @@ export function EarlyAccess() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setFormState("submitting");
-    // Simulate async — no real backend yet
-    await new Promise((r) => setTimeout(r, 900));
-    setFormState("success");
-    formRef.current?.reset();
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      email: formData.get("email"),
+      company: formData.get("company"),
+      building: formData.get("building"),
+      hardest: formData.get("hardest") || "",
+      submittedAt: serverTimestamp(),
+    };
+
+    try {
+      await addDoc(collection(db, "waitlist"), data);
+      setFormState("success");
+      formRef.current?.reset();
+    } catch (error) {
+      console.error("Error submitting form: ", error);
+      setFormState("error");
+    }
   }
 
   return (
@@ -93,6 +110,12 @@ export function EarlyAccess() {
                   type="textarea"
                   placeholder="What visibility gaps are most painful..."
                 />
+
+                {formState === "error" && (
+                  <p className="text-red-400 text-[12px] font-mono text-center">
+                    Something went wrong. Please try again.
+                  </p>
+                )}
 
                 <button
                   type="submit"
