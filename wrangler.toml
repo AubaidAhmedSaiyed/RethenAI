@@ -4,5 +4,5 @@ compatibility_date = "2026-09-13"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "rethen-db"
-database_id = "INSERT_YOUR_DATABASE_ID_HERE"
+database_name = "rethen-form"
+database_id = "a095c72a-aa49-4fda-a6a7-f5ae6391fa65"
