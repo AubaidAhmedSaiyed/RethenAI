@@ -10,6 +10,11 @@ export async function onRequestPost(context: any) {
       return new Response("Database configuration missing", { status: 500 });
     }
 
+    let endpoint = MONGODB_ENDPOINT;
+    if (!endpoint.startsWith("http")) {
+      endpoint = `https://${endpoint}`;
+    }
+
     // Prepare data for MongoDB Atlas Data API
     const payload = {
       dataSource: MONGODB_CLUSTER || "Cluster0", // Usually "Cluster0"
@@ -22,7 +27,7 @@ export async function onRequestPost(context: any) {
     };
 
     // Call MongoDB Atlas Data API
-    const response = await fetch(`${MONGODB_ENDPOINT}/action/insertOne`, {
+    const response = await fetch(`${endpoint}/action/insertOne`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,15 +39,13 @@ export async function onRequestPost(context: any) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("MongoDB Error:", errorText);
-      return new Response("Failed to save to database", { status: 500 });
+      return new Response(`MongoDB Error: ${errorText}`, { status: 500 });
     }
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" },
     });
-  } catch (err) {
-    console.error(err);
-    return new Response("Internal Server Error", { status: 500 });
+  } catch (err: any) {
+    return new Response(`Internal Server Error: ${err.message || err.toString()}`, { status: 500 });
   }
 }
