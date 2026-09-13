@@ -20,19 +20,33 @@ export async function onRequestPost(context: any) {
     
     await stmt.bind(email, company, building, hardest || "", new Date().toISOString()).run();
 
-    // Optional: Send notification to Discord/Slack webhook
-    const webhookUrl = context.env.NOTIFY_WEBHOOK_URL;
-    if (webhookUrl) {
+    // Optional: Send Email Notification via Resend
+    const resendApiKey = context.env.RESEND_API_KEY;
+    const notifyEmail = context.env.NOTIFY_EMAIL;
+    
+    if (resendApiKey && notifyEmail) {
       try {
-        await fetch(webhookUrl, {
+        await fetch("https://api.resend.com/emails", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${resendApiKey}`
+          },
           body: JSON.stringify({
-            content: `🚀 **New Waitlist Submission!**\n**Email:** ${email}\n**Company:** ${company}\n**Building:** ${building}\n**Hardest:** ${hardest || "N/A"}`
+            from: "Rethen AI <onboarding@resend.dev>",
+            to: notifyEmail,
+            subject: "🚀 New Waitlist Submission",
+            html: `
+              <h2>New Waitlist Submission!</h2>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Company:</strong> ${company}</p>
+              <p><strong>Building:</strong> ${building}</p>
+              <p><strong>Hardest:</strong> ${hardest || "N/A"}</p>
+            `
           }),
         });
       } catch (e) {
-        console.error("Failed to send webhook notification", e);
+        console.error("Failed to send email notification", e);
       }
     }
 
